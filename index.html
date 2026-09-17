@@ -1,0 +1,2791 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FutFantasy</title>
+
+<style>
+:root{
+  --bg:#0D0D12;
+  --card:#1A1A22;
+  --green:#39FF88;
+  --cyan:#00E5FF;
+  --text:#fff;
+  --muted:#9CA3AF;
+  --red:#FF4C4C;
+  --line:#2b2b36;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Poppins,Arial,sans-serif;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+  border:0;
+}
+
+.app{
+  min-height:100vh;
+}
+
+.top{
+  padding:18px 24px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  background:rgba(13,13,18,.95);
+  z-index:5;
+}
+
+.brand{
+  font-size:24px;
+  font-weight:800;
+}
+
+.brand span{
+  color:var(--green);
+}
+
+.user{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.content{
+  max-width:1200px;
+  margin:auto;
+  padding:24px;
+}
+
+.nav{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
+
+.nav button,
+.btn{
+  background:var(--card);
+  color:#fff;
+  padding:11px 15px;
+  border-radius:10px;
+  border:1px solid var(--line);
+}
+
+.nav button.active,
+.btn.primary{
+  background:var(--green);
+  color:#07120c;
+  border-color:var(--green);
+  font-weight:700;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:14px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:18px;
+}
+
+.metric{
+  font-size:30px;
+  font-weight:800;
+  margin-top:8px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+h1,
+h2,
+h3{
+  margin-top:0;
+}
+
+.player-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:12px;
+  margin-top:16px;
+}
+
+.player{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:15px;
+}
+
+.player.selected{
+  border-color:var(--green);
+  box-shadow:0 0 18px rgba(57,255,136,.12);
+}
+
+.avatar{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#111118;
+  border:1px solid var(--line);
+  font-size:25px;
+  margin-bottom:10px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:14px 0;
+}
+
+.input,
+.select{
+  background:#111118;
+  border:1px solid var(--line);
+  color:#fff;
+  border-radius:10px;
+  padding:11px;
+}
+
+.budget{
+  position:sticky;
+  top:75px;
+  z-index:3;
+  background:#111118;
+  border:1px solid var(--green);
+  padding:13px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.bar{
+  height:8px;
+  background:#292933;
+  border-radius:99px;
+  overflow:hidden;
+  margin-top:8px;
+}
+
+.bar>i{
+  display:block;
+  height:100%;
+  background:var(--green);
+}
+
+.pill{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:99px;
+  background:#111118;
+  color:var(--cyan);
+  font-size:12px;
+}
+
+.danger{
+  color:var(--red);
+}
+
+.good{
+  color:var(--green);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--card);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+th,
+td{
+  text-align:left;
+  padding:13px;
+  border-bottom:1px solid var(--line);
+}
+
+tr.me{
+  background:rgba(57,255,136,.08);
+}
+
+.pitch{
+  min-height:540px;
+  border-radius:18px;
+  border:2px solid #285c46;
+  background:linear-gradient(#123b2b,#0d2b20);
+  position:relative;
+  overflow:hidden;
+  padding:20px;
+}
+
+.pitch:before{
+  content:"";
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:50%;
+  border-top:2px solid rgba(255,255,255,.25);
+}
+
+.pitch:after{
+  content:"";
+  position:absolute;
+  left:30%;
+  right:30%;
+  top:39%;
+  height:22%;
+  border:2px solid rgba(255,255,255,.25);
+}
+
+.formation{
+  position:relative;
+  height:500px;
+}
+
+.slot{
+  position:absolute;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+
+.ball{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#0d1110;
+  border:2px solid var(--green);
+  box-shadow:0 0 15px rgba(57,255,136,.2);
+  margin:auto;
+}
+
+.slot small{
+  display:block;
+  margin-top:5px;
+  font-size:11px;
+  max-width:90px;
+}
+
+.radar{
+  width:360px;
+  max-width:100%;
+  height:300px;
+}
+
+.login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:20px;
+}
+
+.loginbox{
+  width:min(430px,100%);
+  background:var(--card);
+  padding:30px;
+  border-radius:20px;
+  border:1px solid var(--line);
+}
+
+.loginbox .input{
+  width:100%;
+  margin:7px 0;
+}
+
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#1d2830;
+  border:1px solid var(--cyan);
+  padding:13px 16px;
+  border-radius:10px;
+  display:none;
+  z-index:20;
+}
+
+.achievement{
+  border-left:4px solid var(--green);
+}
+
+.small{
+  font-size:13px;
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.empty{
+  padding:40px;
+  text-align:center;
+  color:var(--muted);
+}
+
+.stat-bar{
+  height:8px;
+  background:#292933;
+  border-radius:99px;
+  overflow:hidden;
+  margin:6px 0 12px;
+}
+
+.stat-bar i{
+  display:block;
+  height:100%;
+  background:var(--cyan);
+}
+
+@media(max-width:650px){
+
+  .content{
+    padding:15px;
+  }
+
+  .top{
+    padding:15px;
+  }
+
+  .metric{
+    font-size:25px;
+  }
+
+  th,
+  td{
+    padding:9px;
+    font-size:13px;
+  }
+
+  .pitch{
+    min-height:500px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+
+/* =========================================================
+   DATOS DE JUGADORES
+========================================================= */
+
+const players = [
+
+{
+ id:1,
+ n:'Leo Álvarez',
+ pos:'POR',
+ price:8,
+ pace:72,
+ shoot:35,
+ pass:70,
+ def:82,
+ phys:78,
+ g:0,
+ a:1,
+ card:1,
+ pts:[6,8,5,9,7]
+},
+
+{
+ id:2,
+ n:'Nico Torres',
+ pos:'DEF',
+ price:9,
+ pace:78,
+ shoot:42,
+ pass:67,
+ def:88,
+ phys:84,
+ g:2,
+ a:2,
+ card:2,
+ pts:[7,6,9,8,10]
+},
+
+{
+ id:3,
+ n:'Marco Silva',
+ pos:'DEF',
+ price:8,
+ pace:75,
+ shoot:38,
+ pass:71,
+ def:84,
+ phys:80,
+ g:1,
+ a:3,
+ card:1,
+ pts:[6,8,7,9,6]
+},
+
+{
+ id:4,
+ n:'Dani Cruz',
+ pos:'DEF',
+ price:7,
+ pace:80,
+ shoot:40,
+ pass:65,
+ def:78,
+ phys:77,
+ g:2,
+ a:1,
+ card:3,
+ pts:[5,7,8,6,9]
+},
+
+{
+ id:5,
+ n:'Iván Rojas',
+ pos:'DEF',
+ price:6,
+ pace:69,
+ shoot:45,
+ pass:60,
+ def:75,
+ phys:82,
+ g:1,
+ a:1,
+ card:2,
+ pts:[5,6,7,7,8]
+},
+
+{
+ id:6,
+ n:'Álex Mora',
+ pos:'DEF',
+ price:7,
+ pace:83,
+ shoot:50,
+ pass:73,
+ def:79,
+ phys:74,
+ g:2,
+ a:4,
+ card:1,
+ pts:[8,7,6,10,7]
+},
+
+{
+ id:7,
+ n:'Tomás Vega',
+ pos:'MED',
+ price:11,
+ pace:86,
+ shoot:78,
+ pass:90,
+ def:55,
+ phys:70,
+ g:5,
+ a:7,
+ card:1,
+ pts:[9,11,8,12,10]
+},
+
+{
+ id:8,
+ n:'Samuel León',
+ pos:'MED',
+ price:10,
+ pace:79,
+ shoot:81,
+ pass:84,
+ def:62,
+ phys:76,
+ g:6,
+ a:5,
+ card:2,
+ pts:[8,10,9,7,11]
+},
+
+{
+ id:9,
+ n:'Bruno Díaz',
+ pos:'MED',
+ price:9,
+ pace:82,
+ shoot:69,
+ pass:79,
+ def:65,
+ phys:72,
+ g:4,
+ a:6,
+ card:1,
+ pts:[7,9,10,8,9]
+},
+
+{
+ id:10,
+ n:'Mateo Ruiz',
+ pos:'MED',
+ price:8,
+ pace:76,
+ shoot:65,
+ pass:82,
+ def:58,
+ phys:75,
+ g:3,
+ a:8,
+ card:2,
+ pts:[6,8,9,10,8]
+},
+
+{
+ id:11,
+ n:'Lucas Peña',
+ pos:'MED',
+ price:7,
+ pace:88,
+ shoot:61,
+ pass:74,
+ def:52,
+ phys:69,
+ g:3,
+ a:4,
+ card:3,
+ pts:[8,7,7,9,6]
+},
+
+{
+ id:12,
+ n:'Adrián Sol',
+ pos:'DEL',
+ price:12,
+ pace:92,
+ shoot:91,
+ pass:72,
+ def:30,
+ phys:81,
+ g:10,
+ a:3,
+ card:1,
+ pts:[12,9,14,11,13]
+},
+
+{
+ id:13,
+ n:'Gael Martín',
+ pos:'DEL',
+ price:10,
+ pace:85,
+ shoot:86,
+ pass:76,
+ def:34,
+ phys:78,
+ g:8,
+ a:5,
+ card:2,
+ pts:[10,12,9,13,11]
+},
+
+{
+ id:14,
+ n:'Enzo Vidal',
+ pos:'DEL',
+ price:9,
+ pace:89,
+ shoot:79,
+ pass:68,
+ def:29,
+ phys:73,
+ g:7,
+ a:2,
+ card:1,
+ pts:[9,8,12,8,10]
+}
+
+];
+
+
+/* =========================================================
+   EQUIPOS FICTICIOS
+========================================================= */
+
+const fake = [
+
+['FC Titanes','Carlos',258],
+['Los Halcones','Sofía',247],
+['Real Norte','Diego',239],
+['Atlético 24','Valentina',226],
+['Dream XI','Mateo',214],
+['Rayo FC','Camila',205]
+
+];
+
+
+/* =========================================================
+   ESTADO DEL USUARIO
+========================================================= */
+
+let state =
+JSON.parse(localStorage.getItem('futfantasy') || 'null')
+||
+{
+ user:'',
+ team:'',
+ selected:[],
+ captain:null,
+ week:1,
+ league:'',
+ joined:false,
+ changes:3,
+ achievements:[]
+};
+
+let view='home';
+
+let comp=[];
+
+
+/* =========================================================
+   FUNCIONES GENERALES
+========================================================= */
+
+function save(){
+
+ localStorage.setItem(
+  'futfantasy',
+  JSON.stringify(state)
+ );
+
+}
+
+
+function esc(s){
+
+ return String(s).replace(
+  /[&<>"']/g,
+  c => ({
+   '&':'&amp;',
+   '<':'&lt;',
+   '>':'&gt;',
+   '"':'&quot;',
+   "'":'&#039;'
+  }[c])
+ );
+
+}
+
+
+function toast(t){
+
+ const x=document.getElementById('toast');
+
+ x.textContent=t;
+
+ x.style.display='block';
+
+ setTimeout(()=>{
+  x.style.display='none';
+ },2200);
+
+}
+
+
+function points(p,w=state.week){
+
+ return p.pts[w-1] || 0;
+
+}
+
+
+function price(){
+
+ return state.selected.reduce(
+  (s,id)=>{
+   const p=players.find(p=>p.id===id);
+   return s+p.price;
+  },
+  0
+ );
+
+}
+
+
+function total(){
+
+ let result=state.selected.reduce(
+  (s,id)=>{
+   const p=players.find(p=>p.id===id);
+   return s+points(p);
+  },
+  0
+ );
+
+ if(state.captain){
+
+  const captain=players.find(
+   p=>p.id===state.captain
+  );
+
+  if(captain){
+
+   result+=points(captain);
+
+  }
+
+ }
+
+ return result;
+
+}
+
+
+function valid(){
+
+ let c={
+  POR:0,
+  DEF:0,
+  MED:0,
+  DEL:0
+ };
+
+ state.selected.forEach(id=>{
+
+  const p=players.find(
+   x=>x.id===id
+  );
+
+  if(p){
+   c[p.pos]++;
+  }
+
+ });
+
+ return (
+  c.POR===1 &&
+  c.DEF===4 &&
+  c.MED===4 &&
+  c.DEL===2 &&
+  price()<=100
+ );
+
+}
+
+
+function rank(){
+
+ const base=fake.map(
+  x=>x[2]
+ );
+
+ return 1 + base.filter(
+  x=>x>total()
+ ).length;
+
+}
+
+
+/* =========================================================
+   NAVEGACIÓN
+========================================================= */
+
+function nav(){
+
+ return `
+ <div class="nav">
+
+  <button
+   class="${view==='home'?'active':''}"
+   onclick="go('home')">
+   🏠 Inicio
+  </button>
+
+  <button
+   class="${view==='draft'?'active':''}"
+   onclick="go('draft')">
+   ⚽ Armar equipo
+  </button>
+
+  <button
+   class="${view==='compare'?'active':''}"
+   onclick="go('compare')">
+   📊 Comparar
+  </button>
+
+  <button
+   class="${view==='team'?'active':''}"
+   onclick="go('team')">
+   👥 Mi equipo
+  </button>
+
+  <button
+   class="${view==='league'?'active':''}"
+   onclick="go('league')">
+   🏆 Liga
+  </button>
+
+  <button
+   class="${view==='ach'?'active':''}"
+   onclick="go('ach')">
+   🎖️ Logros
+  </button>
+
+  <button
+   class="${view==='profile'?'active':''}"
+   onclick="go('profile')">
+   👤 Jugadores
+  </button>
+
+ </div>
+ `;
+
+}
+
+
+function shell(body){
+
+ return `
+
+ <div class="app">
+
+  <header class="top">
+
+   <div class="brand">
+    Fut<span>Fantasy</span>
+   </div>
+
+   <div class="user">
+    ${esc(state.user)}
+    ·
+    ${esc(state.team)}
+   </div>
+
+  </header>
+
+  <main class="content">
+
+   ${nav()}
+
+   ${body}
+
+  </main>
+
+ </div>
+
+ `;
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function login(){
+
+ document.getElementById('app').innerHTML=`
+
+ <div class="login">
+
+  <div class="loginbox">
+
+   <h1>
+    Fut<span style="color:var(--green)">
+     Fantasy
+    </span>
+   </h1>
+
+   <p class="muted">
+    Crea tu equipo. Compite. Sube en el ranking.
+   </p>
+
+   <input
+    id="user"
+    class="input"
+    placeholder="Nombre de usuario"
+   >
+
+   <input
+    id="team"
+    class="input"
+    placeholder="Nombre del equipo"
+   >
+
+   <button
+    class="btn primary"
+    style="width:100%;margin-top:10px"
+    onclick="enter()">
+    Entrar
+   </button>
+
+  </div>
+
+ </div>
+
+ `;
+
+}
+
+
+function enter(){
+
+ const u=document
+  .getElementById('user')
+  .value
+  .trim();
+
+ const t=document
+  .getElementById('team')
+  .value
+  .trim();
+
+ if(!u || !t){
+
+  return toast(
+   'Completa ambos campos'
+  );
+
+ }
+
+ state.user=u;
+ state.team=t;
+
+ save();
+
+ render();
+
+}
+
+
+/* =========================================================
+   HOME
+========================================================= */
+
+function home(){
+
+ return shell(`
+
+ <h1>
+  ¡Hola, ${esc(state.user)}! ⚽
+ </h1>
+
+ <div class="grid">
+
+  <div class="card">
+   <span class="muted">
+    Puntos totales
+   </span>
+
+   <div class="metric">
+    ${total()}
+   </div>
+  </div>
+
+
+  <div class="card">
+
+   <span class="muted">
+    Posición
+   </span>
+
+   <div class="metric">
+    #${rank()}
+   </div>
+
+  </div>
+
+
+  <div class="card">
+
+   <span class="muted">
+    Presupuesto usado
+   </span>
+
+   <div class="metric">
+    ${price()} M
+   </div>
+
+  </div>
+
+
+  <div class="card">
+
+   <span class="muted">
+    Cambios disponibles
+   </span>
+
+   <div class="metric">
+    ${state.changes}
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div
+  class="grid"
+  style="margin-top:14px">
+
+  <div class="card">
+
+   <h3>
+    ⭐ Jugador de la semana
+   </h3>
+
+   <p>
+    <b>Adrián Sol</b>
+   </p>
+
+   <p class="good">
+    ${points(players[11])} puntos
+   </p>
+
+  </div>
+
+
+  <div class="card">
+
+   <h3>
+    ⚡ Accesos rápidos
+   </h3>
+
+   <div class="actions">
+
+    <button
+     class="btn primary"
+     onclick="go('draft')">
+     Armar equipo
+    </button>
+
+    <button
+     class="btn"
+     onclick="go('league')">
+     Ver liga
+    </button>
+
+    <button
+     class="btn"
+     onclick="go('team')">
+     Mi equipo
+    </button>
+
+   </div>
+
+  </div>
+
+ </div>
+
+ `);
+
+}
+
+
+/* =========================================================
+   DRAFT
+========================================================= */
+
+function draft(){
+
+ return shell(`
+
+ <div class="budget">
+
+  <div class="row">
+
+   <b>
+    Presupuesto:
+    ${100-price()} M restantes
+   </b>
+
+   <span>
+    ${price()}/100 M
+   </span>
+
+  </div>
+
+  <div class="bar">
+
+   <i
+    style="width:${Math.min(price(),100)}%">
+   </i>
+
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <h1>
+   Armar equipo
+  </h1>
+
+  <div class="controls">
+
+   <input
+    id="search"
+    class="input"
+    placeholder="Buscar jugador..."
+    oninput="filterDraft()"
+   >
+
+   <select
+    id="pos"
+    class="select"
+    onchange="filterDraft()">
+
+    <option value="ALL">
+     Todas las posiciones
+    </option>
+
+    <option value="POR">
+     Porteros
+    </option>
+
+    <option value="DEF">
+     Defensas
+    </option>
+
+    <option value="MED">
+     Mediocampistas
+    </option>
+
+    <option value="DEL">
+     Delanteros
+    </option>
+
+   </select>
+
+
+   <select
+    id="max"
+    class="select"
+    onchange="filterDraft()">
+
+    <option value="100">
+     Precio máximo
+    </option>
+
+    <option value="12">
+     12 M
+    </option>
+
+    <option value="10">
+     10 M
+    </option>
+
+    <option value="8">
+     8 M
+    </option>
+
+   </select>
+
+  </div>
+
+
+  <div
+   id="counts"
+   class="muted small">
+
+   POR 0/1 ·
+   DEF 0/4 ·
+   MED 0/4 ·
+   DEL 0/2
+
+  </div>
+
+
+  <div
+   id="players"
+   class="player-grid">
+
+   ${playerCards(players)}
+
+  </div>
+
+
+  <div
+   class="actions"
+   style="margin-top:18px">
+
+   <button
+    class="btn primary"
+    onclick="saveTeam()">
+    Guardar equipo
+   </button>
+
+   <button
+    class="btn"
+    onclick="go('compare')">
+    Comparar jugadores
+   </button>
+
+  </div>
+
+ </div>
+
+ `);
+
+}
+
+
+function playerCards(list){
+
+ return list.map(p=>{
+
+  const sel=state.selected.includes(p.id);
+
+  return `
+
+  <div
+   class="player ${sel?'selected':''}">
+
+   <div class="avatar">
+    ⚽
+   </div>
+
+
+   <div class="row">
+
+    <b>
+     ${esc(p.n)}
+    </b>
+
+    <span class="pill">
+     ${p.pos}
+    </span>
+
+   </div>
+
+
+   <p class="muted">
+    ${p.price} M ·
+    ${points(p)} pts
+   </p>
+
+
+   <p class="small">
+    ⚡ ${p.pace}
+    · 🎯 ${p.shoot}
+    · 🎯P ${p.pass}
+   </p>
+
+
+   <button
+    class="btn ${sel?'':'primary'}"
+    onclick="togglePlayer(${p.id})">
+
+    ${sel?'Quitar':'+'}
+
+   </button>
+
+  </div>
+
+  `;
+
+ }).join('')
+
+ ||
+ '<div class="empty">No hay jugadores.</div>';
+
+}
+
+
+function filterDraft(){
+
+ const q=
+  document
+  .getElementById('search')
+  .value
+  .toLowerCase();
+
+ const po=
+  document
+  .getElementById('pos')
+  .value;
+
+ const m=
+  +document
+  .getElementById('max')
+  .value;
+
+
+ document.getElementById('players')
+ .innerHTML=
+
+ playerCards(
+
+  players.filter(p=>
+
+   (!q ||
+    p.n
+    .toLowerCase()
+    .includes(q)
+   )
+
+   &&
+
+   (
+    po==='ALL' ||
+    p.pos===po
+   )
+
+   &&
+
+   p.price<=m
+
+  )
+
+ );
+
+ updateCounts();
+
+}
+
+
+function updateCounts(){
+
+ let c={
+  POR:0,
+  DEF:0,
+  MED:0,
+  DEL:0
+ };
+
+ state.selected.forEach(id=>{
+
+  const p=players.find(
+   x=>x.id===id
+  );
+
+  if(p){
+   c[p.pos]++;
+  }
+
+ });
+
+ const el=
+  document.getElementById('counts');
+
+ if(el){
+
+  el.textContent=
+   `POR ${c.POR}/1 ·
+    DEF ${c.DEF}/4 ·
+    MED ${c.MED}/4 ·
+    DEL ${c.DEL}/2`;
+
+ }
+
+}
+
+
+/* =========================================================
+   SELECCIÓN DE JUGADORES
+========================================================= */
+
+function togglePlayer(id){
+
+ const p=
+  players.find(x=>x.id===id);
+
+ if(state.selected.includes(id)){
+
+  state.selected=
+   state.selected.filter(
+    x=>x!==id
+   );
+
+  if(state.captain===id){
+
+   state.captain=null;
+
+  }
+
+ }else{
+
+  if(state.selected.length>=11){
+
+   return toast(
+    'Tu plantilla ya tiene 11 jugadores'
+   );
+
+  }
+
+  if(price()+p.price>100){
+
+   return toast(
+    'No tienes presupuesto suficiente'
+   );
+
+  }
+
+  const count=
+   state.selected
+   .map(x=>players.find(y=>y.id===x).pos)
+   .filter(x=>x===p.pos)
+   .length;
+
+  const lim={
+   POR:1,
+   DEF:4,
+   MED:4,
+   DEL:2
+  }[p.pos];
+
+  if(count>=lim){
+
+   return toast(
+    'Ya tienes el máximo para esta posición'
+   );
+
+  }
+
+  state.selected.push(id);
+
+ }
+
+ save();
+
+ render();
+
+ view='draft';
+
+}
+
+
+/* =========================================================
+   GUARDAR EQUIPO
+========================================================= */
+
+function saveTeam(){
+
+ if(!valid()){
+
+  return toast(
+   'Debes completar 1-4-4-2 sin superar 100 M'
+  );
+
+ }
+
+ toast('Equipo guardado');
+
+ checkAchievements();
+
+ save();
+
+ go('team');
+
+}
+
+
+/* =========================================================
+   COMPARADOR
+========================================================= */
+
+function compare(){
+
+ return shell(`
+
+ <h1>
+  Comparar jugadores
+ </h1>
+
+ <p class="muted">
+  Selecciona hasta 3 jugadores.
+ </p>
+
+
+ <div class="player-grid">
+
+ ${players.map(p=>`
+
+  <div
+   class="player
+   ${comp.includes(p.id)?'selected':''}">
+
+   <div class="row">
+
+    <b>
+     ${p.n}
+    </b>
+
+    <span class="pill">
+     ${p.pos}
+    </span>
+
+   </div>
+
+   <p>
+    ${p.price} M ·
+    ${points(p)} pts
+   </p>
+
+   <button
+    class="btn"
+    onclick="compToggle(${p.id})">
+
+    ${comp.includes(p.id)
+     ?'Quitar'
+     :'Comparar'}
+
+   </button>
+
+  </div>
+
+ `).join('')}
+
+ </div>
+
+
+ ${comp.length?
+
+ `<div
+   class="card"
+   style="margin-top:18px">
+
+   <h2>
+    Radar de atributos
+   </h2>
+
+   <canvas
+    id="radar"
+    class="radar"
+    width="360"
+    height="300">
+   </canvas>
+
+
+   <table>
+
+    <tr>
+
+     <th>
+      Atributo
+     </th>
+
+     ${comp.map(id=>`
+
+      <th>
+       ${players.find(
+        p=>p.id===id
+       ).n}
+      </th>
+
+     `).join('')}
+
+    </tr>
+
+
+    ${[
+     'pace',
+     'shoot',
+     'pass',
+     'def',
+     'phys'
+    ].map((a,i)=>`
+
+     <tr>
+
+      <td>
+       ${
+        [
+         'Ritmo',
+         'Tiro',
+         'Pase',
+         'Defensa',
+         'Físico'
+        ][i]
+       }
+      </td>
+
+      ${comp.map(id=>`
+
+       <td>
+        ${players.find(
+         p=>p.id===id
+        )[a]}
+       </td>
+
+      `).join('')}
+
+     </tr>
+
+    `).join('')}
+
+   </table>
+
+ </div>`
+
+ :''}
+
+ `);
+
+}
+
+
+function compToggle(id){
+
+ if(comp.includes(id)){
+
+  comp=
+   comp.filter(x=>x!==id);
+
+ }else{
+
+  if(comp.length>=3){
+
+   return toast(
+    'Máximo 3 jugadores'
+   );
+
+  }
+
+  comp.push(id);
+
+ }
+
+ render();
+
+ setTimeout(
+  drawRadar,
+  50
+ );
+
+}
+
+
+function drawRadar(){
+
+ const c=
+  document.getElementById('radar');
+
+ if(!c || !comp.length){
+  return;
+ }
+
+ const x=
+  c.getContext('2d');
+
+ const cx=180;
+ const cy=150;
+ const r=105;
+
+ const labels=[
+  'Ritmo',
+  'Tiro',
+  'Pase',
+  'Defensa',
+  'Físico'
+ ];
+
+ x.clearRect(
+  0,
+  0,
+  360,
+  300
+ );
+
+ x.strokeStyle='#555';
+
+ x.fillStyle='#9CA3AF';
+
+ x.font='12px Arial';
+
+
+ for(let ring=1;ring<=3;ring++){
+
+  x.beginPath();
+
+  for(let i=0;i<5;i++){
+
+   let a=
+    -Math.PI/2+
+    i*2*Math.PI/5;
+
+   let rr=
+    r*ring/3;
+
+   x.lineTo(
+    cx+Math.cos(a)*rr,
+    cy+Math.sin(a)*rr
+   );
+
+  }
+
+  x.closePath();
+
+  x.stroke();
+
+ }
+
+
+ for(let i=0;i<5;i++){
+
+  let a=
+   -Math.PI/2+
+   i*2*Math.PI/5;
+
+  x.beginPath();
+
+  x.moveTo(
+   cx,
+   cy
+  );
+
+  x.lineTo(
+   cx+Math.cos(a)*r,
+   cy+Math.sin(a)*r
+  );
+
+  x.stroke();
+
+  x.fillText(
+   labels[i],
+   cx+Math.cos(a)*(r+20)-15,
+   cy+Math.sin(a)*(r+20)
+  );
+
+ }
+
+
+ comp.forEach((id,idx)=>{
+
+  const p=
+   players.find(
+    q=>q.id===id
+   );
+
+  const vals=[
+   p.pace,
+   p.shoot,
+   p.pass,
+   p.def,
+   p.phys
+  ];
+
+  x.beginPath();
+
+  vals.forEach((v,i)=>{
+
+   let a=
+    -Math.PI/2+
+    i*2*Math.PI/5;
+
+   let rr=
+    r*v/100;
+
+   if(i){
+
+    x.lineTo(
+     cx+Math.cos(a)*rr,
+     cy+Math.sin(a)*rr
+    );
+
+   }else{
+
+    x.moveTo(
+     cx+Math.cos(a)*rr,
+     cy+Math.sin(a)*rr
+    );
+
+   }
+
+  });
+
+  x.closePath();
+
+  x.strokeStyle=
+   idx
+   ? '#00E5FF'
+   : '#39FF88';
+
+  x.stroke();
+
+ });
+
+}
+
+
+/* =========================================================
+   MI EQUIPO
+========================================================= */
+
+function team(){
+
+ if(!valid()){
+
+  return shell(`
+
+   <div class="card">
+
+    <h1>
+     Mi equipo
+    </h1>
+
+    <div class="empty">
+
+     Completa y guarda tu formación
+     1-4-4-2 para ver la cancha.
+
+    </div>
+
+    <button
+     class="btn primary"
+     onclick="go('draft')">
+
+     Ir al Draft
+
+    </button>
+
+   </div>
+
+  `);
+
+ }
+
+
+ let by={
+  POR:[],
+  DEF:[],
+  MED:[],
+  DEL:[]
+ };
+
+
+ state.selected.forEach(id=>{
+
+  const p=
+   players.find(
+    p=>p.id===id
+   );
+
+  by[p.pos].push(p);
+
+ });
+
+
+ let slots=[
+
+  ...by.POR.map(
+   (p,i)=>[p,50,90]
+  ),
+
+  ...by.DEF.map(
+   (p,i)=>[
+    p,
+    20+i*20,
+    70
+   ]
+  ),
+
+  ...by.MED.map(
+   (p,i)=>[
+    p,
+    20+i*20,
+    45
+   ]
+  ),
+
+  ...by.DEL.map(
+   (p,i)=>[
+    p,
+    35+i*30,
+    18
+   ]
+  )
+
+ ];
+
+
+ return shell(`
+
+ <div class="row">
+
+  <h1>
+   Mi equipo · 4-4-2
+  </h1>
+
+  <button
+   class="btn"
+   onclick="go('draft')">
+
+   Editar
+
+  </button>
+
+ </div>
+
+
+ <div class="pitch">
+
+  <div class="formation">
+
+   ${slots.map(
+    ([p,l,t])=>`
+
+    <div
+     class="slot"
+     style="left:${l}%;top:${t}%">
+
+     <div class="ball">
+
+      ${
+       state.captain===p.id
+       ?'⭐'
+       :'⚽'
+      }
+
+     </div>
+
+     <small>
+
+      ${esc(p.n)}
+
+      <br>
+
+      ${points(p)} pts
+
+      ${
+       state.captain===p.id
+       ?' · CAPITÁN'
+       :''
+      }
+
+     </small>
+
+    </div>
+
+   `).join('')}
+
+  </div>
+
+ </div>
+
+
+ <div
+  class="card"
+  style="margin-top:14px">
+
+  <div class="row">
+
+   <b>
+    Total jornada
+   </b>
+
+   <strong class="good">
+    ${total()} pts
+   </strong>
+
+  </div>
+
+
+  <p class="muted small">
+
+   El capitán obtiene el doble
+   de sus puntos.
+
+  </p>
+
+
+  <div class="controls">
+
+   ${state.selected.map(id=>{
+
+    const p=
+     players.find(
+      q=>q.id===id
+     );
+
+    return `
+
+     <button
+      class="btn
+      ${state.captain===id?'primary':''}"
+      onclick="setCaptain(${id})">
+
+      ${p.n}
+
+      ${state.captain===id?'⭐':''}
+
+     </button>
+
+    `;
+
+   }).join('')}
+
+  </div>
+
+
+  <button
+   class="btn primary"
+   onclick="changePlayer()">
+
+   🔄 Hacer un cambio
+   (${state.changes} restantes)
+
+  </button>
+
+ </div>
+
+ `);
+
+}
+
+
+/* =========================================================
+   CAPITÁN
+========================================================= */
+
+function setCaptain(id){
+
+ state.captain=id;
+
+ save();
+
+ toast(
+  'Capitán actualizado'
+ );
+
+ checkAchievements();
+
+ render();
+
+}
+
+
+/* =========================================================
+   CAMBIO DE JUGADOR
+========================================================= */
+
+function changePlayer(){
+
+ if(!state.changes){
+
+  return toast(
+   'No tienes cambios disponibles'
+  );
+
+ }
+
+
+ if(!valid()){
+
+  return toast(
+   'Primero completa tu equipo'
+  );
+
+ }
+
+
+ let out=
+  state.selected[0];
+
+ let p=
+  players.find(
+   x=>x.id===out
+  );
+
+
+ let replacement=
+  players.find(
+
+   x=>
+    x.pos===p.pos &&
+    !state.selected.includes(x.id) &&
+    price()-p.price+x.price<=100
+
+ );
+
+
+ if(!replacement){
+
+  return toast(
+   'No hay reemplazo válido'
+  );
+
+ }
+
+
+ state.selected=
+  state.selected.filter(
+   x=>x!==out
+  );
+
+
+ state.selected.push(
+  replacement.id
+ );
+
+
+ state.changes--;
+
+
+ if(state.captain===out){
+
+  state.captain=null;
+
+ }
+
+
+ save();
+
+ checkAchievements();
+
+ toast(
+  `${p.n} fue cambiado por ${replacement.n}`
+ );
+
+ render();
+
+}
+
+
+/* =========================================================
+   LIGA Y RANKING
+========================================================= */
+
+function league(){
+
+ let rows=[
+
+  ...fake.map(x=>({
+
+   team:x[0],
+   user:x[1],
+   pts:x[2],
+   me:false
+
+  })),
+
+  {
+   team:state.team,
+   user:state.user,
+   pts:total(),
+   me:true
+  }
+
+ ];
+
+
+ rows.sort(
+  (a,b)=>b.pts-a.pts
+ );
+
+
+ return shell(`
+
+ <div class="row">
+
+  <h1>
+   Liga y Ranking
+  </h1>
+
+  <div class="actions">
+
+   <button
+    class="btn primary"
+    onclick="createLeague()">
+
+    Crear liga
+
+   </button>
+
+
+   <button
+    class="btn"
+    onclick="joinLeague()">
+
+    Unirse con código
+
+   </button>
+
+  </div>
+
+ </div>
+
+
+ ${
+  state.league
+  ?
+
+  `<div
+    class="card"
+    style="margin-bottom:14px">
+
+    <b>
+     Tu liga:
+    </b>
+
+    ${state.league}
+
+    ${
+     state.joined
+     ?'· conectado'
+     :''
+    }
+
+  </div>`
+
+  :''
+ }
+
+
+ <table>
+
+  <tr>
+
+   <th>#</th>
+   <th>Equipo</th>
+   <th>Usuario</th>
+   <th>Puntos</th>
+   <th>Tendencia</th>
+
+  </tr>
+
+
+  ${rows.map(
+   (r,i)=>`
+
+   <tr
+    class="${r.me?'me':''}">
+
+    <td>
+     ${i+1}
+    </td>
+
+    <td>
+     ${esc(r.team)}
+    </td>
+
+    <td>
+     ${esc(r.user)}
+    </td>
+
+    <td>
+     <b>
+      ${r.pts}
+     </b>
+    </td>
+
+    <td
+     class="${r.me?'good':''}">
+
+     ${r.me?'↑':'—'}
+
+    </td>
+
+   </tr>
+
+  `).join('')}
+
+ </table>
+
+
+ <p
+  class="muted small"
+  style="margin-top:12px">
+
+  Jornada actual:
+  ${state.week}
+
+  · Los datos de rivales son ficticios.
+
+ </p>
+
+ `);
+
+}
+
+
+/* =========================================================
+   LIGAS PRIVADAS
+========================================================= */
+
+function createLeague(){
+
+ const code=
+  'FF-' +
+  Math.random()
+  .toString(36)
+  .slice(2,7)
+  .toUpperCase();
+
+
+ state.league=code;
+
+ state.joined=true;
+
+ save();
+
+ toast(
+  'Liga creada: '+code
+ );
+
+ render();
+
+}
+
+
+function joinLeague(){
+
+ const c=
+  prompt(
+   'Introduce el código de liga (ej. FF-ABCDE)'
+  );
+
+
+ if(c?.trim()){
+
+  state.league=
+   c.trim().toUpperCase();
+
+  state.joined=true;
+
+  save();
+
+  checkAchievements();
+
+  toast(
+   'Te uniste a '+state.league
+  );
+
+  render();
+
+ }
+
+}
+
+
+/* =========================================================
+   LOGROS
+========================================================= */
+
+function ach(){
+
+ checkAchievements();
+
+
+ const list=[
+
+  [
+   'starter',
+   'Primer equipo',
+   'Guarda una plantilla válida.'
+  ],
+
+  [
+   'captain',
+   'Capitán',
+   'Elige un capitán.'
+  ],
+
+  [
+   'strategist',
+   'Estratega',
+   'Usa un cambio de jugador.'
+  ],
+
+  [
+   'scorer',
+   'Gran jornada',
+   'Supera 40 puntos en una jornada.'
+  ],
+
+  [
+   'social',
+   'Competitivo',
+   'Crea o únete a una liga.'
+  ]
+
+ ];
+
+
+ return shell(`
+
+ <h1>
+  🏆 Logros
+ </h1>
+
+
+ <div class="grid">
+
+  ${list.map(
+   a=>`
+
+   <div
+    class="card achievement">
+
+    <h3>
+
+     ${
+      state.achievements.includes(a[0])
+      ?'✅'
+      :'🔒'
+     }
+
+     ${a[1]}
+
+    </h3>
+
+    <p class="muted">
+     ${a[2]}
+    </p>
+
+   </div>
+
+  `).join('')}
+
+ </div>
+
+ `);
+
+}
+
+
+/* =========================================================
+   ESTADÍSTICAS / PERFIL DE JUGADOR
+========================================================= */
+
+function profile(){
+
+ return shell(`
+
+ <h1>
+  👤 Jugadores
+ </h1>
+
+ <p class="muted">
+  Consulta estadísticas ampliadas
+  de todos los jugadores.
+ </p>
+
+
+ <div class="player-grid">
+
+  ${players.map(p=>`
+
+   <div class="player">
+
+    <div class="avatar">
+     ⚽
+    </div>
+
+    <h3>
+     ${p.n}
+    </h3>
+
+    <span class="pill">
+     ${p.pos}
+    </span>
+
+    <p>
+     💰 ${p.price} M
+    </p>
+
+
+    <p class="small">
+     Goles: <b>${p.g}</b>
+     <br>
+     Asistencias: <b>${p.a}</b>
+     <br>
+     Tarjetas: <b>${p.card}</b>
+     <br>
+     Promedio:
+     <b>
+      ${(
+       p.pts.reduce(
+        (a,b)=>a+b,0
+       ) / p.pts.length
+      ).toFixed(1)}
+     </b>
+    </p>
+
+
+    <p class="small">
+     Ritmo
+    </p>
+
+    <div class="stat-bar">
+     <i style="width:${p.pace}%"></i>
+    </div>
+
+
+    <p class="small">
+     Tiro
+    </p>
+
+    <div class="stat-bar">
+     <i style="width:${p.shoot}%"></i>
+    </div>
+
+
+    <p class="small">
+     Pase
+    </p>
+
+    <div class="stat-bar">
+     <i style="width:${p.pass}%"></i>
+    </div>
+
+
+    <p class="small">
+     Defensa
+    </p>
+
+    <div class="stat-bar">
+     <i style="width:${p.def}%"></i>
+    </div>
+
+
+    <p class="small">
+     Físico
+    </p>
+
+    <div class="stat-bar">
+     <i style="width:${p.phys}%"></i>
+    </div>
+
+
+    <button
+     class="btn"
+     onclick="playerHistory(${p.id})">
+
+     Ver historial
+
+    </button>
+
+   </div>
+
+  `).join('')}
+
+ </div>
+
+ `);
+
+}
+
+
+function playerHistory(id){
+
+ const p=
+  players.find(
+   x=>x.id===id
+  );
+
+ alert(
+
+  `Historial de ${p.n}\n\n` +
+
+  p.pts.map(
+   (pts,i)=>
+    `Jornada ${i+1}: ${pts} puntos`
+  ).join('\n')
+
+ );
+
+}
+
+
+/* =========================================================
+   LOGROS AUTOMÁTICOS
+========================================================= */
+
+function checkAchievements(){
+
+ const a=
+  state.achievements;
+
+
+ if(
+  valid() &&
+  !a.includes('starter')
+ ){
+
+  a.push('starter');
+
+ }
+
+
+ if(
+  state.captain &&
+  !a.includes('captain')
+ ){
+
+  a.push('captain');
+
+ }
+
+
+ if(
+  state.changes<3 &&
+  !a.includes('strategist')
+ ){
+
+  a.push('strategist');
+
+ }
+
+
+ if(
+  total()>40 &&
+  !a.includes('scorer')
+ ){
+
+  a.push('scorer');
+
+ }
+
+
+ if(
+  state.league &&
+  !a.includes('social')
+ ){
+
+  a.push('social');
+
+ }
+
+
+ save();
+
+}
+
+
+/* =========================================================
+   CAMBIO DE PANTALLA
+========================================================= */
+
+function go(v){
+
+ view=v;
+
+ render();
+
+}
+
+
+/* =========================================================
+   RENDER PRINCIPAL
+========================================================= */
+
+function render(){
+
+ if(!state.user){
+
+  login();
+
+  return;
+
+ }
+
+
+ checkAchievements();
+
+
+ let body;
+
+
+ if(view==='home'){
+
+  body=home();
+
+ }
+
+ else if(view==='draft'){
+
+  body=draft();
+
+ }
+
+ else if(view==='compare'){
+
+  body=compare();
+
+ }
+
+ else if(view==='team'){
+
+  body=team();
+
+ }
+
+ else if(view==='league'){
+
+  body=league();
+
+ }
+
+ else if(view==='ach'){
+
+  body=ach();
+
+ }
+
+ else if(view==='profile'){
+
+  body=profile();
+
+ }
+
+
+ document.getElementById(
+  'app'
+ ).innerHTML=body;
+
+
+ if(view==='compare'){
+
+  setTimeout(
+   drawRadar,
+   50
+  );
+
+ }
+
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>
